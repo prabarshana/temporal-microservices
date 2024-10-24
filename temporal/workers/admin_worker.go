@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 
-	admin_workflows "99x.io/admin_gateway/workflows"
+	activity "99x.io/admin_gateway/activity"
+	workflows "99x.io/admin_gateway/workflows"
 
 	"99x.io/shared/vars"
 
@@ -23,9 +24,12 @@ func main() {
 	w := worker.New(c, vars.TaskQueue, worker.Options{})
 
 	// Register the workflow and activity
-	w.RegisterWorkflow(admin_workflows.DisableRobotWorkflow)
-	w.RegisterActivity(admin_workflows.DisableRobotActivity)
-	w.RegisterActivity(admin_workflows.SendNotificationActivity)
+	w.RegisterWorkflow(workflows.DisableRobotWorkflow)
+	w.RegisterWorkflow(workflows.PackageUpgradeWorkflow)
+	w.RegisterActivity(activity.DisableRobotActivity)
+	w.RegisterActivity(activity.SendNotificationActivity)
+	w.RegisterActivity(activity.GetPackageActivity)
+	w.RegisterActivity(activity.UpdatePackageActivity)
 
 	// Start listening for workflow tasks
 	err = w.Run(worker.InterruptCh())
